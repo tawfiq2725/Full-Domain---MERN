@@ -1,0 +1,779 @@
+What is Data? - What is database? - Why database? - Advantages of a database
+Different kinds of database models.( SQL vs NoSQL )(Types of database)  --  Relation vs Non-Relational 
+* Collection - Document - Field
+
+
+What is mongodb - CRUD  -- Features of mongodb
+Alternatives of MongoDB 
+- Data type
+	- String, Number, Boolean, Null, Undefined, Object, Array, Date, 
+	  Object ID, Binary Data, Regular Expression, Code, Timestamp
+
+What is RDBMS?  -  Why RDBMS?
+Relational data modeling 
+Relationship with example 
+	Types - One-to-one, One-to-many, Many-to-many
+	- Keys - Primary Key, Foreign Key, Unique Key
+Relational Model
+	- Abstract Structures
+	- Table(Relation) - Data is stored in tables.
+		- Rows (records)
+		- Columns (attributes)  --  Domain(valid values)
+
+Data Redundancy with example - // same multiple book on room
+Denormalization (embedded data modeling)
+Database Normalization - Different kinds of normal forms with examples.
+
+----------------------------------------------------------------
+
+Referential integrity (Accuracy & Consistency)
+	Benefits - Data Consistency, Data Accuracy, Data Integrity
+
+
+Horizontal (Scale Out) (clothing store in differenct places) 
+Vertical Scalability (Scale UP) (multiple floor clothing)
+
+Capped Collection - fixed max size - FIFO
+Create a capped collection - db.createCollection("Collection-name", { capped: true, size: 1024 * 1024 });  - dimention in bytes
+Clustered collection - (Index) sorts the document in the collection
+
+Views
+
+
+----------------------------------------------------------------
+
+- BSON document type (database) (16mb) -> GridFS (Files, Chunks - 255kb)
+- CAP theorem (Brewer's Theorem)  *** (Consistency, Availability, Partition Tolerance)
+- $regex case insensitivity - patterns matching
+- Journeling - Journel file  ***
+- Transaction 
+	- ACID theoram(properties) - Atomicity, Consistency, Isolation, & Durability 
+- Thread Operations 
+	- Single Threading, Multi Threading, Parallelism(Aggregation pipeline, sharding)
+- Cluster - Scaling database
+	- Replica sets (Replication), election (no primary 
+
+	- Sharding Clusturing (components)->Shards,Config servers,Mongos router ;Shard key
+- Alias
+- Mongo Utilities
+	# Data Backup and Restore (mongodump, mongorestore)
+	# Data Import and Export (mongoimport, mongoexport)
+	# Database Administration (mongod, mongos, mongo)
+	# User Managment (createUser)
+	# Other Utilities (mongostat, mongofiles)
+- Indexing
+	# Single-field index, Compund index, Multi-Key Indexes, Unique index, Text index, Geospatial index (2dsphere index, 2d index), Hashed Indexes
+- Namespace - seperate by dot (.)
+- Insert vs save
+
+
+- Command line options
+
+---------------------------------------------------------------
+
+cursor  (Cursor methods) - .limit()  .sort()   .skip()   .forEach()   .close()
+embedded object 
+allowdiskuse (100MB)
+Mongodb atlas --  trigger
+Projection
+
+Map reduce  (Map function, Reduce function)
+Storage engine -- type of storage engine (WiredTiger, In-Memory)
+Admin database     (admin, local, config)
+Object ID structure- (Timestamp, Machine Identifier, Process Identifier, Counter)
+Object Id size
+ttl (Session data, Log files, Event data)
+db.colName.createIndex({ "createdAt": 1 }, { expireAfterSeconds: 86400 })
+
+
+* Aggregation Pipeline13
+Types of Aggregation
+	- Filtering - $match
+	- Grouping - $group
+	- Sorting - $sort
+	- Projection - $project
+	- Aggregatiion funcitons - $avg, $sum, $count, $min, $max
+	- Additional stages - $lookup(Combine), $facet(Analyze)
+	
+
+----------------------------------------------------------------
+
+
+db.orders.aggregate([
+  {
+    $match: { "status": "completed" } // Filter for completed orders only
+  },
+  {
+    $unwind: "$items" // Unwind the "items" array to process each item individually
+  },
+  {
+    $group: {
+      _id: "$items.category", // Group by the "category" field within the "items" array
+      average_price: { $avg: "$items.price" } // Calculate the average price for each category
+    }
+  },
+  {
+    $sort: { average_price: 1 } // Sort results by average price in ascending order
+  }
+])
+
+
+db.products.aggregate([
+  {
+    $project: {
+      _id: 0, // Exclude the default "_id" field from the output
+      name: 1,
+      category: 1,
+      stock: 1,
+    }
+  }
+])
+
+
+Aggregate workout: find count of students in each class
+db.workout.aggregate([
+  {
+    "$group": {
+      "_id": "$class", // Group by the "class" field
+      "count": { "$sum": 1 } // Count the number of documents in each group
+    }
+  }
+])
+
+
+
+
+db.yourCollectionName.find({ yourTextFieldName: { $regex: /yourWordHere/i }})
+
+/  /i  - Case Sensitive
+/  /d  - Single digit
+/  /g  - Global search
+
+
+db.products.find({
+  $expr: { $gt: [ { $multiply: [ "$price", 1.1 ] }, 100 ] }  
+	// Find products with price * 1.1 > 100
+});
+
+
+-----------------------------------------------------------------------------
+How to modify the collection name ?
+Pattern matching using regex
+
+MongoClient()
+
+
+
+
+BSON Data Types and Associated Representations
+[ <elements> ]
+{ "$binary": "<bindata>", "$type": "<t>" }
+{"$date": {"$numberLong": "<millis>"}}
+{ <content> }   //Document
+{ "$timestamp": { "t": <t>, "i": <i> } }
+{ "$regex": "<sRegex>", "$options": "<sOptions>" }
+{ "$oid": "<id>" }
+{ "$ref": "<name>", "$id": "<id>" }
+{ "$undefined": true }
+{ "$minKey": 1 }
+{ "$maxKey": 1 }
+{ "$numberLong": "<number>" }  //int 64
+{ "$numberInt": "<number>" }  // int 32
+{ "$numberDecimal": "<number>" }
+{"$numberDouble": "<decimal string>" }
+
+
+
+MongoDB Database Tools
+bsondump
+mongodump
+mongoexport
+mongoimport
+
+
+
+
+
+mongod --version
+mongosh
+db.help()
+db.<collection-name>.help()
+show dbs
+use <dbname>
+show collections
+db.createCollection(<collection-name>)
+show users         // Print all users	
+show roles	   // Print all roles
+show profile	   // Print 5 most recent opertions
+db.collection.drop()
+db.dropDatabase()
+db           // Show current database name
+cls
+exit
+
+
+cd Pictures
+dir
+mongodump -d <old_databaseName> -o ./
+mongorestore -d <new_databaseName> ./<old_databaseName>
+mongosh
+use <old_databaseName>
+db.dropDatabase()
+
+
+db.collection_name.renameCollection("new_collection_name")
+db.runCommand({ renameCollection: "collection_name", to: "new_collection_name" })
+
+
+db.colName.insertOne() -- Create
+.insertMany()
+
+
+
+find() -- Read
+findOne()
+countDocuments()
+
+
+.update()  -- Update
+.updateOne({filter},{$set:{existingField:newValue}}) //Change the value
+.updateMany() when used with the upsert: true option.
+.replaceOne()  // replaces an entire docuemnt
+.findAndModify() when used with the upsert: true option. //depreicated
+.findOneAndUpdate() (upsert: true option.) //single document update (change score)
+.findOneAndReplace() when used with the upsert: true option. // Add to a single document
+.bulkWrite()  // insert, update, delete all at once
+
+document:{}
+update:{}
+filter:{}
+
+
+.deleteOne()  -- Delete docuemnts
+.deleteMany()
+.remove()
+ 
+
+
+.count()
+.countDocument()
+.estimatedDocumentCount()
+
+Projection = db.colname.find({}, {field1:1, field2:1})
+Embedded Documents  =  db.colname.find({"parent.child":value})
+Removing and Renaming  =  $unset, $rename
+	db.colname.updateOne({filter},{$unset:{fieldName:1}});
+	db.colname.updateOne({filter},{$rename:{oldFiledName:"NewFieldNa."}}) //key rename
+
+
+$set -- Atomic Operators
+$unset
+$inc   --- decrement
+$min
+$max
+$push  -- $pushAll
+$pop
+$pull
+db.colname.updateMany({filter}, {$pull: {friends:"Mike"}})  --  pullAll
+
+
+db.colname.find().sort({name:1,age:-1})  -- Read Modifiers (use of options)
+db.colname.find().limit(2)
+db.colname.find().skip(4)
+
+
+
+$eq   --  Complex Filter Object(Comparison Operators) 
+$ne   ------  db.colname.find({ name: {$ne:'Kyle'}})
+$gt/$gte
+$lt/$lte
+$in -- - --  db.colname.find({name: {$in: ['Kyle', 'Mike']}})
+$nin
+$all
+$elemMatch
+
+
+$and --  Logical(Bitwise) Operators
+$or ---  db.colname.find({$or: [{age:12}, {name:'albert'}]})
+$nor  
+$xor  // Not exists
+$not  --- db.colname.find({name: {$not: {$eq: "Albert}}})
+
+
+$expr   --  db.colname.find({ $expr: {$gt: ["$balance","$dept"]}}) 
+	    // comparision between different fields
+
+
+
+$exists  --  Elements Operator
+$type
+$size
+$distinct() ------ Find Unique location names
+
+$addToSet
+
+mapReduce()
+db.colname.estimatedDocumentCount({})
+
+
+{upsert:true}
+{multi:true}  -- db.colname.update({filter}, {<update>}, {multi:true})
+{$distinct:true} // Hide and unhide documents from each documents and print it. (use find)
+{$exists:false} // Find the documents where a particular field not available  
+
+db.colname.find({fieldName: {$exists:true}})
+
+db.bookdb1.find({author: {$exists:true, $eq: 'Robert Kiyosaki'}})
+
+db.collectionName.find({
+  $and: [
+    { "outerFieldName": { $exists: true } },  // Check outer field exists
+    { "outerFieldName": { $not: { $elemMatch: { "specificField": { $exists: true } } } } }  // Check specific field doesn't exist in any embedded document
+  ]
+});
+
+
+db.collectionName.find({
+  "outerFieldName.innerFieldName": {
+    $exists: true                    // Check if the outer field exists
+  },
+  "outerFieldName.innerFieldName.specificField": {
+    $exists: false  // Check if a specific field within the embedded document doesn't exist
+  }
+});
+
+
+
+
+db.colname.aggregate() 
+$sortByCount
+$sort
+$limit
+$skip
+$group --- $dateToString  $sum  $multiply  $avg
+$geoNear
+$accumulator
+$function
+Field Path - $
+Dotten field name - .
+$redact
+$match
+
+$lookup
+$graphLookup
+$merge
+$out
+$unionWith
+$changeStream
+$changeStreamSplitLargeEvent()
+$collStats
+$count
+$currentOp
+$densify
+$documents
+$facet
+$indexStats
+$listLocalSessions
+$listSampledQueries
+$listSearchIndexes
+$listSessions
+$planCacheStats
+$let
+$map
+
+
+
+Joint Operations 
+$mul
+$mod
+$facet
+$dateSubtract
+$type
+
+
+$range
+$out
+$merge
+$count
+ 
+$where
+
+Aggregation - Accumulators - $max $min $sum $avg
+Practice Aggregation - $match, $project, $group, $unwind, $sort, $limit
+
+
+$addFields  -- Complex Update Object (Update Operations) Aggreagation pipeline
+$set  
+$project
+$unset
+$unwind
+$vectorSearch
+$replaceRoot
+$replaceWith
+$pretty
+$sample
+$search
+$searchMeta
+$shardedDataDistribution
+{allowDiskUse: false}  -- Memory Restrictions
+$bucket
+$bucketAuto
+$setWindowFields
+
+
+
+Document Manipulation:
+
+$project
+$unwind
+$group
+$sort
+$filter
+$redact
+
+Math and Statistics:
+$avg
+$sum
+$min
+$max
+$count
+$stdDevPop
+$stdDevSamp
+
+String Manipulation:
+$concat
+$substr
+$split
+$toUpper
+$toLower
+
+Array Manipulation:
+$push
+$addToSet
+$first
+$last
+$size
+
+Conditional Logic:
+$cond
+$switch
+
+Date and Time Manipulation:
+$dateToString
+$toDate
+$add
+$subtract
+
+
+db.colname.createIndex()   -- Indexing Commands
+db.colname.dropIndex()
+db.colname.dropIndexes()
+db.colname.getIndexes()
+db.colname.reIndex()
+db.colname.totalIndexSize()
+
+rs.add()  -- - -- Replication Commands
+rs.conf()
+rs.status()
+rs.stepDown() 
+rs.remove()
+rs.reconfig()
+
+sh.abortReshardCollection()  ---- Sharding Commands
+sh.addShard()
+sh.commitReshardCollection()
+sh.disableBalancing()
+sh.enableAutoSplit()
+sh.enableAutoSplit()
+sh.disableAutoSplit()
+sh.enableSharding()
+sh.help()
+sh.moveChunk()
+sh.reshardCollection()
+sh.shardCollection()
+sh.splitAt()
+sh.splitFind()
+sh.status()
+sh.status()
+sh.waitForPingChange()
+refineCollectionShardKey
+convertShardKeyToHashed()
+
+db.runCommand()  -- Database Methods
+db.adminCommand() 
+
+db.auth()  -- - -- User Management Commands
+db.changeUserPassword()
+db.createUser()
+db.dropUser()
+db.dropAllUsers()
+db.getUser()
+db.getUsers()
+db.grandRolesToUser()
+db.removeUser()
+db.revokeRolesFromUser()
+db.updateUser()
+passwordPrompt()
+
+db.createRole()  --- - - Role Management Commands
+db.dropRole()
+db.dropAllRoles()
+db.getRole() - db.getRoles()
+db.grandPrivilegesToRoles()
+db.revokePrivilegesFromRole()
+db.grantRolesToRole()
+db.revokeRolesFromRole()
+db.updateRole()
+
+
+
+
+mongoimport jsonfile.json -d database_name -c collection_name
+mongoexport -d database_name -c collection_name -o E:\mongo\salestest.json    (location)
+
+d  // Database
+c  // Collection
+o  // Out
+
+
+
+
+
+
+.aggregate()  --- Retryable Read Operations (CRUD API Read Operations)
+.count() 
+.countDocuments()
+.distinct()
+.estimatedDocumentCount()
+.find()
+db.aggregate
+
+For Collection.aggregate and Database.aggregate, drivers can only retry aggregation pipelines which do not include write stages, such as $out or $merge.
+
+Collection.watch  --- Change Stream Operations
+Database.watch
+MongoClient.watch
+
+MongoClient.listDatabases  --- Enumeration Operations
+Database.listCollections
+Collection.listIndexes
+
+
+
+
+
+
+
+All Aggregation
+
+
+$abs (aggregation)
+$accumulator (aggregation)
+$acos (aggregation)
+$acosh (aggregation)
+$add (aggregation)
+$addToSet (aggregation)
+$allElementsTrue (aggregation)
+$and (aggregation)
+$anyElementTrue (aggregation)
+$arrayElemAt (aggregation)
+$arrayToObject (aggregation)
+$asin (aggregation)
+$asinh (aggregation)
+$atan (aggregation)
+$atan2 (aggregation)
+$atanh (aggregation)
+$avg (aggregation)
+$binarySize (aggregation)
+$bitAnd (aggregation)
+$bitNot (aggregation)
+$bitOr (aggregation)
+$bitXor (aggregation)
+$bottom (aggregation accumulator)
+$bottomN (aggregation accumulator)
+$bsonSize (aggregation)
+$ceil (aggregation)
+$cmp (aggregation)
+$concat (aggregation)
+$concatArrays (aggregation)
+$cond (aggregation)
+$convert (aggregation)
+$cos (aggregation)
+$cosh (aggregation)
+$count (aggregation accumulator)
+$covariancePop (aggregation)
+$covarianceSamp (aggregation)
+$dateAdd (aggregation)
+$dateDiff (aggregation)
+$dateFromParts (aggregation)
+$dateFromString (aggregation)
+$dateSubtract (aggregation)
+$dateToParts (aggregation)
+$dateToString (aggregation)
+$dateTrunc (aggregation)
+$dayOfMonth (aggregation)
+$dayOfWeek (aggregation)
+$dayOfYear (aggregation)
+$degreesToRadians (aggregation)
+$denseRank (aggregation)
+$derivative (aggregation)
+$divide (aggregation)
+$documentNumber (aggregation)
+$eq (aggregation)
+$exp (aggregation)
+$expMovingAvg (aggregation)
+$filter (aggregation)
+$first (aggregation)
+$firstN (aggregation accumulator)
+$firstN (array operator)
+$floor (aggregation)
+$function (aggregation)
+$getField (aggregation)
+$gt (aggregation)
+$gte (aggregation)
+$hour (aggregation)
+$ifNull (aggregation)
+$in (aggregation)
+$indexOfArray (aggregation)
+$indexOfBytes (aggregation)
+$indexOfCP (aggregation)
+$integral (aggregation)
+$isArray (aggregation)
+$isNumber (aggregation)
+$isoDayOfWeek (aggregation)
+$isoWeek (aggregation)
+$isoWeekYear (aggregation)
+$last (aggregation)
+$lastN (aggregation accumulator)
+$lastN (array operator)
+$let (aggregation)
+$linearFill (aggregation)
+$literal (aggregation)
+$ln (aggregation)
+$locf (aggregation)
+$log (aggregation)
+$log10 (aggregation)
+$lt (aggregation)
+$lte (aggregation)
+$ltrim (aggregation)
+$map (aggregation)
+$max (aggregation)
+$maxN (aggregation accumulator)
+$maxN (array operator)
+$median (aggregation)
+$mergeObjects (aggregation)
+$meta
+$min (aggregation)
+$minN (aggregation accumulator)
+$minN (array operator)
+$millisecond (aggregation)
+$minute (aggregation)
+$mod (aggregation)
+$month (aggregation)
+$multiply (aggregation)
+$ne (aggregation)
+$not (aggregation)
+$objectToArray (aggregation)
+$or (aggregation)
+$percentile (aggregation)
+$pow (aggregation)
+$push (aggregation)
+$radiansToDegrees (aggregation)
+$rand (aggregation)
+$range (aggregation)
+$rank (aggregation)
+$reduce (aggregation)
+$regexFind (aggregation)
+$regexFindAll (aggregation)
+$regexMatch (aggregation)
+$replaceOne (aggregation)
+$replaceAll (aggregation)
+$reverseArray (aggregation)
+$round (aggregation)
+$rtrim (aggregation)
+$sampleRate (aggregation)
+$second (aggregation)
+$setDifference (aggregation)
+$setEquals (aggregation)
+$setField (aggregation)
+$setIntersection (aggregation)
+$setIsSubset (aggregation)
+$setUnion (aggregation)
+$shift (aggregation)
+$size (aggregation)
+$sin (aggregation)
+$sinh (aggregation)
+$slice (aggregation)
+$sortArray (aggregation)
+$split (aggregation)
+$sqrt (aggregation)
+$stdDevPop (aggregation)
+$stdDevSamp (aggregation)
+$strcasecmp (aggregation)
+$strLenBytes (aggregation)
+$strLenCP (aggregation)
+$substr (aggregation)
+$substrBytes (aggregation)
+$substrCP (aggregation)
+$subtract (aggregation)
+$sum (aggregation)
+$switch (aggregation)
+$tan (aggregation)
+$tanh (aggregation)
+$toBool (aggregation)
+$toDate (aggregation)
+$toDecimal (aggregation)
+$toDouble(aggregation)
+$toHashedIndexKey (aggregation)
+$toInt (aggregation)
+$toLong (aggregation)
+$toObjectId (aggregation)
+$top (aggregation accumulator)
+$topN (aggregation accumulator)
+$toString (aggregation)
+$toLower (aggregation)
+$toUpper (aggregation)
+$tsIncrement (aggregation)
+$tsSecond (aggregation)
+$trim (aggregation)
+$trunc (aggregation)
+$type (aggregation)
+$unsetField (aggregation)
+$week (aggregation)
+$year (aggregation)
+$zip (aggregation)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
